@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title>太原 · Kindle 墨水屏看板</title>
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; background: #fff; color: #111; }
+    body { font-family: "Noto Serif SC", "Songti SC", SimSun, serif; -webkit-text-size-adjust: 100%; }
+    * { box-sizing: border-box; }
+    button { font: inherit; color: #111; background: #fff; border: 1px solid #111; border-radius: 0; }
+    .dashboard { width: 100%; min-height: 100vh; padding: 2.2vw 2.8vw 1.3vw; background: #fff; }
+    .top { display: table; width: 100%; table-layout: fixed; }
+    .left, .right { display: table-cell; vertical-align: top; }
+    .left { width: 35%; padding-right: 1.5vw; }
+    .right { width: 65%; }
+
+    .clock-card { min-height: 26vh; height: auto; padding-bottom: 1.6vh; position: relative; border-bottom: 2px solid #111; }
+    .time { font-size: 10.6vw; line-height: 1; letter-spacing: -0.07em; white-space: nowrap; }
+    .date-line { margin-top: 1.2vh; font-size: 1.9vw; line-height: 1.35; letter-spacing: .08em; }
+    .lunar-line { margin-top: .7vh; font-size: 1.4vw; line-height: 1.35; color: #444; }
+
+    .quote-card { min-height: 21vh; height: auto; padding: 2.4vh 1.2vw 1.5vh; overflow: hidden; }
+    .quote-en { font-size: 1.55vw; line-height: 1.45; font-style: italic; }
+    .quote-cn { margin-top: 1.2vh; font-size: 1.35vw; line-height: 1.55; color: #333; }
+
+    .weather-now { height: 24vh; background: #fff; padding: 1.6vh 1.5vw 1vh; }
+    .weather-heading { font-size: 1.75vw; font-weight: bold; letter-spacing: .08em; }
+    .weather-main { display: table; width: 100%; table-layout: fixed; margin-top: .4vh; }
+    .temperature, .condition-wrap { display: table-cell; vertical-align: middle; }
+    .temperature { width: 38%; font-size: 7vw; line-height: .95; white-space: nowrap; }
+    .degree { font-size: .42em; vertical-align: top; }
+    .condition-wrap { width: 62%; padding-left: 1vw; }
+    .condition { font-size: 2.4vw; font-weight: bold; margin-bottom: 1.4vh; }
+    .weather-meta { display: table; width: 100%; table-layout: fixed; border-top: 1px solid #999; padding-top: 1vh; }
+    .weather-meta span { display: table-cell; font-size: 1.25vw; white-space: nowrap; }
+    .weather-meta strong { font-weight: bold; }
+
+    .forecast { margin-top: 1.2vh; padding: 1.1vh 1.2vw .5vh; background: #fff; height: 24vh; overflow: hidden; }
+    .forecast-title { font-size: 1.35vw; font-weight: bold; letter-spacing: .15em; padding-bottom: .7vh; border-bottom: 1px solid #777; }
+    .forecast table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .forecast td { height: 4.5vh; padding: 0 .3vw; border-bottom: 1px solid #aaa; font-size: 1.2vw; white-space: nowrap; text-align: center; }
+    .forecast td:first-child { width: 19%; text-align: left; font-weight: bold; }
+    .forecast td:nth-child(2) { width: 27%; }
+    .forecast td:nth-child(3) { width: 27%; }
+    .forecast td:last-child { width: 27%; text-align: right; }
+
+    .calendar-card { margin-top: 1.4vh; height: 39vh; padding: 1vh 1vw .4vh; background: #fff; border-top: 1px solid #555; border-bottom: 2px solid #111; overflow: hidden; }
+    .calendar-title { font-size: 1.45vw; font-weight: bold; letter-spacing: .09em; margin-bottom: .5vh; }
+    .calendar { border-collapse: collapse; width: 100%; table-layout: fixed; text-align: center; }
+    .calendar th { height: 3.4vh; border-bottom: 1px solid #111; font-size: 1vw; font-weight: normal; }
+    .calendar td { height: 4.8vh; border-bottom: 1px solid #c2c0b9; font-size: 1.25vw; }
+    .calendar td.muted { color: #999; }
+    .today-mark { display: inline-block; min-width: 2.15em; height: 2.15em; line-height: 2.05em; border: 2px solid #111; border-radius: 50%; font-weight: bold; }
+
+    .footer { display: table; width: 100%; height: 4.2vh; padding-top: .8vh; color: #555; }
+    .footer-left, .footer-right { display: table-cell; vertical-align: middle; font-size: .92vw; }
+    .footer-right { text-align: right; }
+    .layout-button { margin-left: .5vw; padding: .25em .55em; font-size: .92vw; border-color: #777; }
+    .status-error { color: #111; font-weight: bold; }
+
+    @media (max-aspect-ratio: 6/5) {
+      .dashboard { padding: 2.2vw 3vw 1vw; }
+      .top, .left, .right { display: block; width: 100%; }
+      .left { padding-right: 0; }
+      .clock-card { min-height: 20vh; height: auto; padding-bottom: 1vh; text-align: center; }
+      .time { font-size: 17.5vw; letter-spacing: -.05em; }
+      .date-line { margin-top: .3vh; font-size: 3.1vw; }
+      .lunar-line { margin-top: .25vh; font-size: 2.3vw; }
+      .quote-card { min-height: 11vh; height: auto; padding: 1.3vh 2vw .7vh; border-bottom: 1px solid #777; }
+      .quote-text { margin-left: 0; }
+      .quote-en { font-size: 2.35vw; line-height: 1.35; }
+      .quote-cn { margin-top: .6vh; font-size: 2.2vw; line-height: 1.4; }
+      .weather-now { height: 15vh; margin-top: 1vh; padding: 1vh 2.2vw .6vh; }
+      .weather-heading { font-size: 2.7vw; }
+      .temperature { font-size: 11vw; }
+      .condition { font-size: 3.3vw; margin-bottom: .7vh; }
+      .weather-meta { padding-top: .6vh; }
+      .weather-meta span { font-size: 2vw; }
+      .forecast { height: 18vh; margin-top: .8vh; padding: .6vh 2vw .3vh; }
+      .forecast-title { font-size: 2.25vw; padding-bottom: .4vh; }
+      .forecast td { height: 3.45vh; font-size: 2vw; }
+      .calendar-card { height: 28vh; margin-top: .8vh; padding: .6vh 1.5vw .3vh; }
+      .calendar-title { font-size: 2.4vw; margin-bottom: .3vh; }
+      .calendar th { height: 2.7vh; font-size: 1.8vw; }
+      .calendar td { height: 3.2vh; font-size: 2.05vw; }
+      .today-mark { min-width: 1.9em; height: 1.9em; line-height: 1.75em; }
+      .footer { height: 3vh; padding-top: .5vh; }
+      .footer-left, .footer-right, .layout-button { font-size: 1.65vw; }
+    }
+
+    @media print {
+      .layout-button { display: none; }
+      .dashboard { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <section class="top">
+      <div class="left">
+        <div class="clock-card">
+          <div id="time" class="time">--:--</div>
+          <div id="dateLine" class="date-line">正在读取日期</div>
+          <div id="lunarLine" class="lunar-line">农历日期</div>
+        </div>
+        <div class="quote-card">
+          <div class="quote-text">
+            <div id="quoteEn" class="quote-en"></div>
+            <div id="quoteCn" class="quote-cn"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <section class="weather-now">
+          <div id="weatherHeading" class="weather-heading">太原 · 天气</div>
+          <div class="weather-main">
+            <div class="temperature"><span id="temperature">--</span><span class="degree">°</span></div>
+            <div class="condition-wrap">
+              <div id="condition" class="condition">正在获取天气</div>
+              <div class="weather-meta">
+                <span>体感 <strong id="feelsLike">--°</strong></span>
+                <span>湿度 <strong id="humidity">--%</strong></span>
+                <span>风速 <strong id="wind">-- km/h</strong></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="forecast">
+          <div class="forecast-title">未来四日</div>
+          <table aria-label="未来四日天气">
+            <tbody id="forecastBody">
+              <tr><td>今天</td><td>--</td><td>-- / --°</td><td>降雨 --</td></tr>
+              <tr><td>明天</td><td>--</td><td>-- / --°</td><td>降雨 --</td></tr>
+              <tr><td>周三</td><td>--</td><td>-- / --°</td><td>降雨 --</td></tr>
+              <tr><td>周四</td><td>--</td><td>-- / --°</td><td>降雨 --</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </section>
+
+    <section class="calendar-card">
+      <div id="calendarTitle" class="calendar-title"></div>
+      <table class="calendar" aria-label="本月月历">
+        <thead><tr><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr></thead>
+        <tbody id="calendarBody"></tbody>
+      </table>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-left"><span id="weatherStatus">天气尚未更新</span></div>
+      <div class="footer-right">
+        <span>每15分钟更新</span>
+        <button id="refreshButton" class="layout-button" type="button">刷新</button>
+        <span>&nbsp;·&nbsp;横竖屏自适应</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="solarlunar.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=37.8706&longitude=112.5489&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FShanghai&forecast_days=5';
+    var WEATHER_CACHE_KEY = 'kindle-taiyuan-weather-v1';
+    var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+    var quotes = [
+      ['If you look for it, I have a sneaky feeling you will find that love actually is all around.', '如果你用心寻找，会发现爱其实无处不在。'],
+      ['The secret of getting ahead is getting started.', '迈向前方的秘密，是先迈出第一步。'],
+      ['Nothing is worth more than this day.', '没有什么比今天更值得珍惜。'],
+      ['Simplicity is the ultimate sophistication.', '简单，是终极的精巧。'],
+      ['Wherever you go, go with all your heart.', '无论去往何方，都请全心以赴。'],
+      ['A quiet mind is able to hear intuition over fear.', '心静下来，才听得见直觉，而不是恐惧。'],
+      ['Great things are done by a series of small things brought together.', '伟大的事情，来自许多小事的积累。'],
+      ['The sun is new each day.', '太阳每天都是新的。']
+    ];
+
+    function byId(id) { return document.getElementById(id); }
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+    function round(value) { return Math.round(Number(value)); }
+
+    function updateClock() {
+      var now = new Date();
+      byId('time').innerHTML = pad(now.getHours()) + ':' + pad(now.getMinutes());
+      byId('dateLine').innerHTML = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日&nbsp;&nbsp;星期' + weekdays[now.getDay()];
+      updateLunar(now);
+      renderCalendar(now);
+      selectQuote(now);
+    }
+
+    function updateLunar(now) {
+      var text = '';
+      try {
+        var lunarTool = window.solarlunar || (window.solarLunar && (window.solarLunar.default || window.solarLunar));
+        if (lunarTool && lunarTool.solar2lunar) {
+          var lunar = lunarTool.solar2lunar(now.getFullYear(), now.getMonth() + 1, now.getDate());
+          text = lunar.gzYear + '年 · ' + lunar.monthCn + lunar.dayCn;
+          if (lunar.term) { text += ' · ' + lunar.term; }
+        }
+      } catch (ignore) {}
+      byId('lunarLine').innerHTML = text || '太原 · 中国标准时间';
+    }
+
+    function selectQuote(now) {
+      var start = new Date(now.getFullYear(), 0, 0);
+      var day = Math.floor((now - start) / 86400000);
+      var quote = quotes[day % quotes.length];
+      byId('quoteEn').innerHTML = quote[0];
+      byId('quoteCn').innerHTML = quote[1];
+    }
+
+    function renderCalendar(now) {
+      var year = now.getFullYear();
+      var month = now.getMonth();
+      var first = new Date(year, month, 1);
+      var mondayIndex = (first.getDay() + 6) % 7;
+      var cursor = new Date(year, month, 1 - mondayIndex);
+      var html = '';
+      var row, col;
+      byId('calendarTitle').innerHTML = year + '年' + (month + 1) + '月';
+      for (row = 0; row < 6; row++) {
+        html += '<tr>';
+        for (col = 0; col < 7; col++) {
+          var sameMonth = cursor.getMonth() === month;
+          var isToday = cursor.getFullYear() === year && cursor.getMonth() === month && cursor.getDate() === now.getDate();
+          html += '<td' + (sameMonth ? '' : ' class="muted"') + '>';
+          html += isToday ? '<span class="today-mark">' + cursor.getDate() + '</span>' : cursor.getDate();
+          html += '</td>';
+          cursor.setDate(cursor.getDate() + 1);
+        }
+        html += '</tr>';
+      }
+      byId('calendarBody').innerHTML = html;
+    }
+
+    function weatherName(code) {
+      code = Number(code);
+      if (code === 0) { return '晴'; }
+      if (code === 1) { return '大部晴朗'; }
+      if (code === 2) { return '多云'; }
+      if (code === 3) { return '阴'; }
+      if (code === 45 || code === 48) { return '雾'; }
+      if (code >= 51 && code <= 57) { return '毛毛雨'; }
+      if (code >= 61 && code <= 67) { return code >= 65 ? '大雨' : '有雨'; }
+      if (code >= 71 && code <= 77) { return '有雪'; }
+      if (code >= 80 && code <= 82) { return '阵雨'; }
+      if (code >= 85 && code <= 86) { return '阵雪'; }
+      if (code >= 95) { return '雷雨'; }
+      return '天气变化';
+    }
+
+    function dayLabel(index, dateText) {
+      if (index === 0) { return '今天'; }
+      if (index === 1) { return '明天'; }
+      var date = new Date(dateText + 'T12:00:00');
+      return '周' + weekdays[date.getDay()];
+    }
+
+    function renderWeather(data, fromCache) {
+      if (!data || !data.current || !data.daily) { return false; }
+      var current = data.current;
+      var daily = data.daily;
+      byId('temperature').innerHTML = round(current.temperature_2m);
+      byId('condition').innerHTML = weatherName(current.weather_code);
+      byId('feelsLike').innerHTML = round(current.apparent_temperature) + '°';
+      byId('humidity').innerHTML = round(current.relative_humidity_2m) + '%';
+      byId('wind').innerHTML = round(current.wind_speed_10m) + ' km/h';
+      byId('weatherHeading').innerHTML = '太原 · ' + weatherName(current.weather_code);
+      var html = '';
+      var count = Math.min(4, daily.time.length);
+      var i;
+      for (i = 0; i < count; i++) {
+        html += '<tr>';
+        html += '<td>' + dayLabel(i, daily.time[i]) + '</td>';
+        html += '<td>' + weatherName(daily.weather_code[i]) + '</td>';
+        html += '<td>' + round(daily.temperature_2m_max[i]) + ' / ' + round(daily.temperature_2m_min[i]) + '°</td>';
+        html += '<td>降雨 ' + round(daily.precipitation_probability_max[i]) + '%</td>';
+        html += '</tr>';
+      }
+      byId('forecastBody').innerHTML = html;
+      var stamp = data._savedAt ? new Date(data._savedAt) : new Date();
+      byId('weatherStatus').className = '';
+      byId('weatherStatus').innerHTML = (fromCache ? '离线天气 · ' : '天气更新于 ') + pad(stamp.getHours()) + ':' + pad(stamp.getMinutes());
+      return true;
+    }
+
+    function readWeatherCache() {
+      try {
+        var cached = localStorage.getItem(WEATHER_CACHE_KEY);
+        if (cached) { renderWeather(JSON.parse(cached), true); }
+      } catch (ignore) {}
+    }
+
+    function fetchWeather() {
+      byId('weatherStatus').className = '';
+      byId('weatherStatus').innerHTML = '正在更新太原天气…';
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', WEATHER_URL, true);
+      xhr.timeout = 18000;
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) { return; }
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            data._savedAt = new Date().toISOString();
+            renderWeather(data, false);
+            try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(data)); } catch (ignore) {}
+            return;
+          } catch (ignoreJson) {}
+        }
+        weatherFailed();
+      };
+      xhr.ontimeout = weatherFailed;
+      xhr.onerror = weatherFailed;
+      try { xhr.send(); } catch (ignoreSend) { weatherFailed(); }
+    }
+
+    function weatherFailed() {
+      byId('weatherStatus').className = 'status-error';
+      byId('weatherStatus').innerHTML = '联网失败 · 已保留上次天气';
+    }
+
+    byId('refreshButton').onclick = function () { updateClock(); fetchWeather(); };
+    readWeatherCache();
+    updateClock();
+    fetchWeather();
+    setInterval(updateClock, 30000);
+    setInterval(fetchWeather, 15 * 60 * 1000);
+  }());
+  </script>
+</body>
+</html>
