@@ -18,39 +18,39 @@
 
     .clock-card { min-height: 26vh; height: auto; padding-bottom: 1.6vh; position: relative; border-bottom: 2px solid #111; }
     .time { font-size: 10.6vw; line-height: 1; letter-spacing: -0.07em; white-space: nowrap; }
-    .date-line { margin-top: 1.2vh; font-size: 1.9vw; line-height: 1.35; letter-spacing: .08em; }
-    .lunar-line { margin-top: .7vh; font-size: 1.4vw; line-height: 1.35; color: #444; }
+    .date-line { margin-top: 1.2vh; font-size: 2.2vw; line-height: 1.35; letter-spacing: .08em; }
+    .lunar-line { margin-top: .7vh; font-size: 1.7vw; line-height: 1.35; color: #444; }
 
     .quote-card { min-height: 21vh; height: auto; padding: 2.4vh 1.2vw 1.5vh; overflow: hidden; }
-    .quote-en { font-size: 1.55vw; line-height: 1.45; font-style: italic; }
-    .quote-cn { margin-top: 1.2vh; font-size: 1.35vw; line-height: 1.55; color: #333; }
+    .quote-en { font-size: 1.9vw; line-height: 1.4; font-style: italic; }
+    .quote-cn { margin-top: 1.2vh; font-size: 1.65vw; line-height: 1.5; color: #333; }
 
     .weather-now { height: 24vh; background: #fff; padding: 1.6vh 1.5vw 1vh; }
-    .weather-heading { font-size: 1.75vw; font-weight: bold; letter-spacing: .08em; }
+    .weather-heading { font-size: 2vw; font-weight: bold; letter-spacing: .08em; }
     .weather-main { display: table; width: 100%; table-layout: fixed; margin-top: .4vh; }
     .temperature, .condition-wrap { display: table-cell; vertical-align: middle; }
     .temperature { width: 38%; font-size: 7vw; line-height: .95; white-space: nowrap; }
     .degree { font-size: .42em; vertical-align: top; }
     .condition-wrap { width: 62%; padding-left: 1vw; }
-    .condition { font-size: 2.4vw; font-weight: bold; margin-bottom: 1.4vh; }
+    .condition { font-size: 2.7vw; font-weight: bold; margin-bottom: 1.4vh; }
     .weather-meta { display: table; width: 100%; table-layout: fixed; border-top: 1px solid #999; padding-top: 1vh; }
-    .weather-meta span { display: table-cell; font-size: 1.25vw; white-space: nowrap; }
+    .weather-meta span { display: table-cell; font-size: 1.45vw; white-space: nowrap; }
     .weather-meta strong { font-weight: bold; }
 
     .forecast { margin-top: 1.2vh; padding: 1.1vh 1.2vw .5vh; background: #fff; height: 24vh; overflow: hidden; }
-    .forecast-title { font-size: 1.35vw; font-weight: bold; letter-spacing: .15em; padding-bottom: .7vh; border-bottom: 1px solid #777; }
+    .forecast-title { font-size: 1.6vw; font-weight: bold; letter-spacing: .15em; padding-bottom: .7vh; border-bottom: 1px solid #777; }
     .forecast table { border-collapse: collapse; width: 100%; table-layout: fixed; }
-    .forecast td { height: 4.5vh; padding: 0 .3vw; border-bottom: 1px solid #aaa; font-size: 1.2vw; white-space: nowrap; text-align: center; }
+    .forecast td { height: 4.5vh; padding: 0 .3vw; border-bottom: 1px solid #aaa; font-size: 1.42vw; white-space: nowrap; text-align: center; }
     .forecast td:first-child { width: 19%; text-align: left; font-weight: bold; }
     .forecast td:nth-child(2) { width: 27%; }
     .forecast td:nth-child(3) { width: 27%; }
     .forecast td:last-child { width: 27%; text-align: right; }
 
     .calendar-card { margin-top: 1.4vh; height: 39vh; padding: 1vh 1vw .4vh; background: #fff; border-top: 1px solid #555; border-bottom: 2px solid #111; overflow: hidden; }
-    .calendar-title { font-size: 1.45vw; font-weight: bold; letter-spacing: .09em; margin-bottom: .5vh; }
+    .calendar-title { font-size: 1.75vw; font-weight: bold; letter-spacing: .09em; margin-bottom: .5vh; }
     .calendar { border-collapse: collapse; width: 100%; table-layout: fixed; text-align: center; }
-    .calendar th { height: 3.4vh; border-bottom: 1px solid #111; font-size: 1vw; font-weight: normal; }
-    .calendar td { height: 4.8vh; border-bottom: 1px solid #c2c0b9; font-size: 1.25vw; }
+    .calendar th { height: 3.4vh; border-bottom: 1px solid #111; font-size: 1.25vw; font-weight: normal; }
+    .calendar td { height: 4.8vh; border-bottom: 1px solid #c2c0b9; font-size: 1.5vw; }
     .calendar td.muted { color: #999; }
     .today-mark { display: inline-block; min-width: 2.15em; height: 2.15em; line-height: 2.05em; border: 2px solid #111; border-radius: 50%; font-weight: bold; }
 
@@ -60,34 +60,68 @@
     .layout-button { margin-left: .5vw; padding: .25em .55em; font-size: .92vw; border-color: #777; }
     .status-error { color: #111; font-weight: bold; }
 
+    /* 简洁格式：只留超大时间、语录和月历。 */
+    .simple-mode .dashboard { padding-top: 1vh; padding-bottom: 0; }
+    .simple-mode .right { display: none; }
+    .simple-mode .left { display: table; width: 100%; padding-right: 0; table-layout: fixed; }
+    .simple-mode .clock-card, .simple-mode .quote-card { display: table-cell; vertical-align: middle; }
+    .simple-mode .clock-card { width: 48%; min-height: 0; height: 42vh; padding: 0 2vw 0 0; border-bottom: 0; border-right: 2px solid #111; text-align: center; }
+    .simple-mode .time { font-size: 18.5vw; line-height: 1; letter-spacing: -.075em; }
+    .simple-mode .date-line, .simple-mode .lunar-line { display: none; }
+    .simple-mode .quote-card { width: 52%; height: 42vh; min-height: 0; padding: 2vh 2.5vw; }
+    .simple-mode .quote-en { font-size: 3.15vw; line-height: 1.32; }
+    .simple-mode .quote-cn { margin-top: 2vh; font-size: 2.65vw; line-height: 1.42; }
+    .simple-mode .calendar-card { height: 49vh; margin-top: 1.2vh; padding: .7vh .8vw .3vh; }
+    .simple-mode .calendar-title { font-size: 2.25vw; }
+    .simple-mode .calendar th { height: 4vh; font-size: 1.7vw; }
+    .simple-mode .calendar td { height: 5.65vh; font-size: 2.15vw; }
+    .simple-mode .footer { display: block; height: 4vh; padding-top: .5vh; text-align: right; }
+    .simple-mode .footer-left, .simple-mode .footer-right > span, .simple-mode #refreshButton { display: none; }
+    .simple-mode .footer-right { display: block; }
+    .simple-mode #modeButton { font-size: 1.15vw; }
+
     @media (max-aspect-ratio: 6/5) {
       .dashboard { padding: 2.2vw 3vw 1vw; }
       .top, .left, .right { display: block; width: 100%; }
       .left { padding-right: 0; }
       .clock-card { min-height: 20vh; height: auto; padding-bottom: 1vh; text-align: center; }
       .time { font-size: 17.5vw; letter-spacing: -.05em; }
-      .date-line { margin-top: .3vh; font-size: 3.1vw; }
-      .lunar-line { margin-top: .25vh; font-size: 2.3vw; }
+      .date-line { margin-top: .3vh; font-size: 3.6vw; }
+      .lunar-line { margin-top: .25vh; font-size: 2.7vw; }
       .quote-card { min-height: 11vh; height: auto; padding: 1.3vh 2vw .7vh; border-bottom: 1px solid #777; }
       .quote-text { margin-left: 0; }
-      .quote-en { font-size: 2.35vw; line-height: 1.35; }
-      .quote-cn { margin-top: .6vh; font-size: 2.2vw; line-height: 1.4; }
+      .quote-en { font-size: 2.9vw; line-height: 1.35; }
+      .quote-cn { margin-top: .6vh; font-size: 2.7vw; line-height: 1.4; }
       .weather-now { height: 15vh; margin-top: 1vh; padding: 1vh 2.2vw .6vh; }
-      .weather-heading { font-size: 2.7vw; }
+      .weather-heading { font-size: 3.3vw; }
       .temperature { font-size: 11vw; }
-      .condition { font-size: 3.3vw; margin-bottom: .7vh; }
+      .condition { font-size: 4vw; margin-bottom: .7vh; }
       .weather-meta { padding-top: .6vh; }
-      .weather-meta span { font-size: 2vw; }
+      .weather-meta span { font-size: 2.5vw; }
       .forecast { height: 18vh; margin-top: .8vh; padding: .6vh 2vw .3vh; }
-      .forecast-title { font-size: 2.25vw; padding-bottom: .4vh; }
-      .forecast td { height: 3.45vh; font-size: 2vw; }
+      .forecast-title { font-size: 2.8vw; padding-bottom: .4vh; }
+      .forecast td { height: 3.45vh; font-size: 2.5vw; }
       .calendar-card { height: 28vh; margin-top: .8vh; padding: .6vh 1.5vw .3vh; }
-      .calendar-title { font-size: 2.4vw; margin-bottom: .3vh; }
-      .calendar th { height: 2.7vh; font-size: 1.8vw; }
-      .calendar td { height: 3.2vh; font-size: 2.05vw; }
+      .calendar-title { font-size: 3vw; margin-bottom: .3vh; }
+      .calendar th { height: 2.7vh; font-size: 2.3vw; }
+      .calendar td { height: 3.2vh; font-size: 2.6vw; }
       .today-mark { min-width: 1.9em; height: 1.9em; line-height: 1.75em; }
       .footer { height: 3vh; padding-top: .5vh; }
       .footer-left, .footer-right, .layout-button { font-size: 1.65vw; }
+
+      .simple-mode .left { display: block; }
+      .simple-mode .clock-card, .simple-mode .quote-card { display: block; width: 100%; }
+      .simple-mode .clock-card { height: 27vh; padding: 0; border-right: 0; border-bottom: 2px solid #111; }
+      .simple-mode .time { font-size: 34vw; line-height: 1.08; }
+      .simple-mode .quote-card { height: 18vh; padding: 1.5vh 3vw; }
+      .simple-mode .quote-en { font-size: 4.5vw; line-height: 1.28; }
+      .simple-mode .quote-cn { margin-top: 1vh; font-size: 4vw; line-height: 1.35; }
+      .simple-mode .calendar-card { height: 47vh; margin-top: .8vh; padding: .6vh 1vw .2vh; }
+      .simple-mode .calendar-title { font-size: 3.4vw; }
+      .simple-mode .calendar th { height: 3.7vh; font-size: 2.7vw; }
+      .simple-mode .calendar td { height: 5.7vh; font-size: 3.9vw; }
+      .simple-mode .footer { height: 4vh; }
+      .simple-mode #modeButton { font-size: 2.2vw; }
     }
 
     @media print {
@@ -156,6 +190,7 @@
       <div class="footer-right">
         <span>每15分钟更新</span>
         <button id="refreshButton" class="layout-button" type="button">刷新</button>
+        <button id="modeButton" class="layout-button" type="button">简洁格式</button>
         <span>&nbsp;·&nbsp;横竖屏自适应</span>
       </div>
     </footer>
@@ -168,6 +203,10 @@
 
     var WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=37.8706&longitude=112.5489&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FShanghai&forecast_days=5';
     var WEATHER_CACHE_KEY = 'kindle-taiyuan-weather-v1';
+    var MODE_KEY = 'kindle-dashboard-mode-v1';
+    var CLOCK_OFFSET_KEY = 'kindle-dashboard-clock-offset-v1';
+    var CHINA_OFFSET = 8 * 60 * 60 * 1000;
+    var clockOffset = 0;
     var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     var quotes = [
       ['If you look for it, I have a sneaky feeling you will find that love actually is all around.', '如果你用心寻找，会发现爱其实无处不在。'],
@@ -184,10 +223,39 @@
     function pad(n) { return n < 10 ? '0' + n : String(n); }
     function round(value) { return Math.round(Number(value)); }
 
+    function accurateEpoch() { return new Date().getTime() + clockOffset; }
+    function chinaDate(epoch) { return new Date((typeof epoch === 'number' ? epoch : accurateEpoch()) + CHINA_OFFSET); }
+
+    function loadClockOffset() {
+      try {
+        var saved = Number(localStorage.getItem(CLOCK_OFFSET_KEY));
+        if (isFinite(saved)) { clockOffset = saved; }
+      } catch (ignore) {}
+    }
+
+    function syncClock() {
+      var started = new Date().getTime();
+      var xhr = new XMLHttpRequest();
+      var cleanUrl = window.location.href.split('#')[0].split('?')[0];
+      xhr.open('HEAD', cleanUrl + '?clock=' + started, true);
+      xhr.timeout = 12000;
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4 || xhr.status < 200 || xhr.status >= 400) { return; }
+        var serverDate = Date.parse(xhr.getResponseHeader('Date'));
+        if (!isNaN(serverDate)) {
+          var finished = new Date().getTime();
+          clockOffset = serverDate + Math.round((finished - started) / 2) - finished;
+          try { localStorage.setItem(CLOCK_OFFSET_KEY, String(clockOffset)); } catch (ignore) {}
+          updateClock();
+        }
+      };
+      try { xhr.send(null); } catch (ignoreSend) {}
+    }
+
     function updateClock() {
-      var now = new Date();
-      byId('time').innerHTML = pad(now.getHours()) + ':' + pad(now.getMinutes());
-      byId('dateLine').innerHTML = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日&nbsp;&nbsp;星期' + weekdays[now.getDay()];
+      var now = chinaDate();
+      byId('time').innerHTML = pad(now.getUTCHours()) + ':' + pad(now.getUTCMinutes());
+      byId('dateLine').innerHTML = now.getUTCFullYear() + '年' + (now.getUTCMonth() + 1) + '月' + now.getUTCDate() + '日&nbsp;&nbsp;星期' + weekdays[now.getUTCDay()];
       updateLunar(now);
       renderCalendar(now);
       selectQuote(now);
@@ -198,7 +266,7 @@
       try {
         var lunarTool = window.solarlunar || (window.solarLunar && (window.solarLunar.default || window.solarLunar));
         if (lunarTool && lunarTool.solar2lunar) {
-          var lunar = lunarTool.solar2lunar(now.getFullYear(), now.getMonth() + 1, now.getDate());
+          var lunar = lunarTool.solar2lunar(now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate());
           text = lunar.gzYear + '年 · ' + lunar.monthCn + lunar.dayCn;
           if (lunar.term) { text += ' · ' + lunar.term; }
         }
@@ -207,31 +275,31 @@
     }
 
     function selectQuote(now) {
-      var start = new Date(now.getFullYear(), 0, 0);
-      var day = Math.floor((now - start) / 86400000);
+      var start = Date.UTC(now.getUTCFullYear(), 0, 0);
+      var day = Math.floor((now.getTime() - start) / 86400000);
       var quote = quotes[day % quotes.length];
       byId('quoteEn').innerHTML = quote[0];
       byId('quoteCn').innerHTML = quote[1];
     }
 
     function renderCalendar(now) {
-      var year = now.getFullYear();
-      var month = now.getMonth();
-      var first = new Date(year, month, 1);
-      var mondayIndex = (first.getDay() + 6) % 7;
-      var cursor = new Date(year, month, 1 - mondayIndex);
+      var year = now.getUTCFullYear();
+      var month = now.getUTCMonth();
+      var first = new Date(Date.UTC(year, month, 1));
+      var mondayIndex = (first.getUTCDay() + 6) % 7;
+      var cursor = new Date(Date.UTC(year, month, 1 - mondayIndex));
       var html = '';
       var row, col;
       byId('calendarTitle').innerHTML = year + '年' + (month + 1) + '月';
       for (row = 0; row < 6; row++) {
         html += '<tr>';
         for (col = 0; col < 7; col++) {
-          var sameMonth = cursor.getMonth() === month;
-          var isToday = cursor.getFullYear() === year && cursor.getMonth() === month && cursor.getDate() === now.getDate();
+          var sameMonth = cursor.getUTCMonth() === month;
+          var isToday = cursor.getUTCFullYear() === year && cursor.getUTCMonth() === month && cursor.getUTCDate() === now.getUTCDate();
           html += '<td' + (sameMonth ? '' : ' class="muted"') + '>';
-          html += isToday ? '<span class="today-mark">' + cursor.getDate() + '</span>' : cursor.getDate();
+          html += isToday ? '<span class="today-mark">' + cursor.getUTCDate() + '</span>' : cursor.getUTCDate();
           html += '</td>';
-          cursor.setDate(cursor.getDate() + 1);
+          cursor.setUTCDate(cursor.getUTCDate() + 1);
         }
         html += '</tr>';
       }
@@ -257,8 +325,8 @@
     function dayLabel(index, dateText) {
       if (index === 0) { return '今天'; }
       if (index === 1) { return '明天'; }
-      var date = new Date(dateText + 'T12:00:00');
-      return '周' + weekdays[date.getDay()];
+      var date = new Date(dateText + 'T12:00:00Z');
+      return '周' + weekdays[date.getUTCDay()];
     }
 
     function renderWeather(data, fromCache) {
@@ -283,9 +351,10 @@
         html += '</tr>';
       }
       byId('forecastBody').innerHTML = html;
-      var stamp = data._savedAt ? new Date(data._savedAt) : new Date();
+      var savedEpoch = data._savedAt ? Date.parse(data._savedAt) : accurateEpoch();
+      var stamp = chinaDate(isNaN(savedEpoch) ? accurateEpoch() : savedEpoch);
       byId('weatherStatus').className = '';
-      byId('weatherStatus').innerHTML = (fromCache ? '离线天气 · ' : '天气更新于 ') + pad(stamp.getHours()) + ':' + pad(stamp.getMinutes());
+      byId('weatherStatus').innerHTML = (fromCache ? '离线天气 · ' : '天气更新于 ') + pad(stamp.getUTCHours()) + ':' + pad(stamp.getUTCMinutes());
       return true;
     }
 
@@ -307,7 +376,7 @@
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             var data = JSON.parse(xhr.responseText);
-            data._savedAt = new Date().toISOString();
+            data._savedAt = new Date(accurateEpoch()).toISOString();
             renderWeather(data, false);
             try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(data)); } catch (ignore) {}
             return;
@@ -325,11 +394,29 @@
       byId('weatherStatus').innerHTML = '联网失败 · 已保留上次天气';
     }
 
-    byId('refreshButton').onclick = function () { updateClock(); fetchWeather(); };
+    function setMode(mode) {
+      var simple = mode === 'simple';
+      document.body.className = simple ? 'simple-mode' : '';
+      byId('modeButton').innerHTML = simple ? '标准格式' : '简洁格式';
+      try { localStorage.setItem(MODE_KEY, simple ? 'simple' : 'standard'); } catch (ignore) {}
+    }
+
+    function loadMode() {
+      var mode = 'standard';
+      try { mode = localStorage.getItem(MODE_KEY) || mode; } catch (ignore) {}
+      setMode(mode);
+    }
+
+    byId('refreshButton').onclick = function () { syncClock(); updateClock(); fetchWeather(); };
+    byId('modeButton').onclick = function () { setMode(document.body.className === 'simple-mode' ? 'standard' : 'simple'); };
+    loadClockOffset();
+    loadMode();
     readWeatherCache();
     updateClock();
+    syncClock();
     fetchWeather();
     setInterval(updateClock, 30000);
+    setInterval(syncClock, 30 * 60 * 1000);
     setInterval(fetchWeather, 15 * 60 * 1000);
   }());
   </script>
