@@ -18,6 +18,7 @@
 
     .clock-card { min-height: 26vh; height: auto; padding-bottom: 1.6vh; position: relative; border-bottom: 2px solid #111; }
     .time { font-size: 10.6vw; line-height: 1; letter-spacing: -0.07em; white-space: nowrap; }
+    .time.countdown { font-size: 6.1vw; letter-spacing: -.035em; }
     .date-line { margin-top: 1.2vh; font-size: 2.2vw; line-height: 1.35; letter-spacing: .08em; }
     .lunar-line { margin-top: .7vh; font-size: 1.7vw; line-height: 1.35; color: #444; }
 
@@ -67,6 +68,7 @@
     .simple-mode .clock-card, .simple-mode .quote-card { display: table-cell; vertical-align: middle; }
     .simple-mode .clock-card { width: 48%; min-height: 0; height: 42vh; padding: 0 2vw 0 0; border-bottom: 0; border-right: 2px solid #111; text-align: center; }
     .simple-mode .time { font-size: 18.5vw; line-height: 1; letter-spacing: -.075em; }
+    .simple-mode .time.countdown { font-size: 12vw; letter-spacing: -.035em; }
     .simple-mode .date-line, .simple-mode .lunar-line { display: none; }
     .simple-mode .quote-card { width: 52%; height: 42vh; min-height: 0; padding: 2vh 2.5vw; }
     .simple-mode .quote-en { font-size: 3.15vw; line-height: 1.32; }
@@ -86,6 +88,7 @@
       .left { padding-right: 0; }
       .clock-card { min-height: 20vh; height: auto; padding-bottom: 1vh; text-align: center; }
       .time { font-size: 17.5vw; letter-spacing: -.05em; }
+      .time.countdown { font-size: 11vw; letter-spacing: -.025em; }
       .date-line { margin-top: .3vh; font-size: 3.6vw; }
       .lunar-line { margin-top: .25vh; font-size: 2.7vw; }
       .quote-card { min-height: 11vh; height: auto; padding: 1.3vh 2vw .7vh; border-bottom: 1px solid #777; }
@@ -113,6 +116,7 @@
       .simple-mode .clock-card, .simple-mode .quote-card { display: block; width: 100%; }
       .simple-mode .clock-card { height: 27vh; padding: 0; border-right: 0; border-bottom: 2px solid #111; }
       .simple-mode .time { font-size: 34vw; line-height: 1.08; }
+      .simple-mode .time.countdown { font-size: 21vw; letter-spacing: -.025em; }
       .simple-mode .quote-card { height: 18vh; padding: 1.5vh 3vw; }
       .simple-mode .quote-en { font-size: 4.5vw; line-height: 1.28; }
       .simple-mode .quote-cn { margin-top: 1vh; font-size: 4vw; line-height: 1.35; }
@@ -190,6 +194,7 @@
       <div class="footer-right">
         <span>每15分钟更新</span>
         <button id="refreshButton" class="layout-button" type="button">刷新</button>
+        <button id="countdownButton" class="layout-button" type="button">倒计时</button>
         <button id="modeButton" class="layout-button" type="button">简洁格式</button>
         <span>&nbsp;·&nbsp;横竖屏自适应</span>
       </div>
@@ -205,8 +210,13 @@
     var WEATHER_CACHE_KEY = 'kindle-taiyuan-weather-v1';
     var MODE_KEY = 'kindle-dashboard-mode-v1';
     var CLOCK_OFFSET_KEY = 'kindle-dashboard-clock-offset-v1';
+    var COUNTDOWN_TARGET_KEY = 'kindle-dashboard-countdown-target-v1';
+    var COUNTDOWN_ACTIVE_KEY = 'kindle-dashboard-countdown-active-v1';
     var CHINA_OFFSET = 8 * 60 * 60 * 1000;
     var clockOffset = 0;
+    var countdownTargetText = '';
+    var countdownTargetEpoch = 0;
+    var countdownActive = false;
     var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     var quotes = [
       ['If you look for it, I have a sneaky feeling you will find that love actually is all around.', '如果你用心寻找，会发现爱其实无处不在。'],
@@ -222,6 +232,81 @@
     function byId(id) { return document.getElementById(id); }
     function pad(n) { return n < 10 ? '0' + n : String(n); }
     function round(value) { return Math.round(Number(value)); }
+
+    function parseCountdownTarget(text) {
+      var match = /^\s*(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{2})\s*$/.exec(text || '');
+      if (!match) { return 0; }
+      var year = Number(match[1]);
+      var month = Number(match[2]);
+      var day = Number(match[3]);
+      var hour = Number(match[4]);
+      var minute = Number(match[5]);
+      if (month < 1 || month > 12 || day < 1 || day > 31 || hour > 23 || minute > 59) { return 0; }
+      var epoch = Date.UTC(year, month - 1, day, hour, minute) - CHINA_OFFSET;
+      var check = chinaDate(epoch);
+      if (check.getUTCFullYear() !== year || check.getUTCMonth() !== month - 1 ||
+          check.getUTCDate() !== day || check.getUTCHours() !== hour || check.getUTCMinutes() !== minute) {
+        return 0;
+      }
+      return epoch;
+    }
+
+    function formatCountdownTarget(epoch) {
+      var target = chinaDate(epoch);
+      return target.getUTCFullYear() + '-' + pad(target.getUTCMonth() + 1) + '-' + pad(target.getUTCDate()) +
+        ' ' + pad(target.getUTCHours()) + ':' + pad(target.getUTCMinutes());
+    }
+
+    function loadCountdown() {
+      try {
+        countdownTargetText = localStorage.getItem(COUNTDOWN_TARGET_KEY) || '';
+        countdownTargetEpoch = parseCountdownTarget(countdownTargetText);
+        countdownActive = localStorage.getItem(COUNTDOWN_ACTIVE_KEY) === '1' && countdownTargetEpoch > 0;
+      } catch (ignore) {}
+    }
+
+    function saveCountdown() {
+      try {
+        if (countdownTargetText) { localStorage.setItem(COUNTDOWN_TARGET_KEY, countdownTargetText); }
+        localStorage.setItem(COUNTDOWN_ACTIVE_KEY, countdownActive ? '1' : '0');
+      } catch (ignore) {}
+    }
+
+    function countdownText(nowEpoch) {
+      var totalMinutes = Math.ceil((countdownTargetEpoch - nowEpoch) / 60000);
+      if (totalMinutes <= 0) { return '00:00'; }
+      var days = Math.floor(totalMinutes / 1440);
+      var hours = Math.floor((totalMinutes % 1440) / 60);
+      var minutes = totalMinutes % 60;
+      return days > 0 ? days + '天 ' + pad(hours) + ':' + pad(minutes) : pad(hours) + ':' + pad(minutes);
+    }
+
+    function setCountdown() {
+      var defaultTarget = countdownTargetText;
+      if (!defaultTarget) { defaultTarget = formatCountdownTarget(accurateEpoch() + 24 * 60 * 60 * 1000); }
+      var entered = window.prompt(
+        '请输入目标时间（北京时间）\n格式：2026-12-31 23:59\n留空并确定：恢复显示当前时间',
+        defaultTarget
+      );
+      if (entered === null) { return; }
+      entered = entered.replace(/^\s+|\s+$/g, '');
+      if (!entered) {
+        countdownActive = false;
+        saveCountdown();
+        updateClock();
+        return;
+      }
+      var parsed = parseCountdownTarget(entered);
+      if (!parsed) {
+        window.alert('时间格式不正确，请按“年-月-日 时:分”输入。');
+        return;
+      }
+      countdownTargetEpoch = parsed;
+      countdownTargetText = formatCountdownTarget(parsed);
+      countdownActive = true;
+      saveCountdown();
+      updateClock();
+    }
 
     function accurateEpoch() { return new Date().getTime() + clockOffset; }
     function chinaDate(epoch) { return new Date((typeof epoch === 'number' ? epoch : accurateEpoch()) + CHINA_OFFSET); }
@@ -254,7 +339,16 @@
 
     function updateClock() {
       var now = chinaDate();
-      byId('time').innerHTML = pad(now.getUTCHours()) + ':' + pad(now.getUTCMinutes());
+      var timeElement = byId('time');
+      if (countdownActive && countdownTargetEpoch > 0) {
+        timeElement.className = 'time countdown';
+        timeElement.innerHTML = countdownText(accurateEpoch());
+        byId('countdownButton').innerHTML = countdownTargetEpoch <= accurateEpoch() ? '倒计时结束' : '倒计时中';
+      } else {
+        timeElement.className = 'time';
+        timeElement.innerHTML = pad(now.getUTCHours()) + ':' + pad(now.getUTCMinutes());
+        byId('countdownButton').innerHTML = '倒计时';
+      }
       byId('dateLine').innerHTML = now.getUTCFullYear() + '年' + (now.getUTCMonth() + 1) + '月' + now.getUTCDate() + '日&nbsp;&nbsp;星期' + weekdays[now.getUTCDay()];
       updateLunar(now);
       renderCalendar(now);
@@ -408,8 +502,10 @@
     }
 
     byId('refreshButton').onclick = function () { syncClock(); updateClock(); fetchWeather(); };
+    byId('countdownButton').onclick = setCountdown;
     byId('modeButton').onclick = function () { setMode(document.body.className === 'simple-mode' ? 'standard' : 'simple'); };
     loadClockOffset();
+    loadCountdown();
     loadMode();
     readWeatherCache();
     updateClock();
